@@ -1,0 +1,86 @@
+const express = require('express');
+const multer = require('multer');
+const path = require('path');
+const config = require('../config');
+const nanoid = require('nanoid');
+const Cocktail = require('../models/Cocktail');
+const auth = require('../middleware/auth');
+const permit = require('../middleware/permit');
+const check = require('../middleware/check');
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, config.uploadPathAlbum);
+    },
+    filename: (req, file, cb) => {
+        cb(null, nanoid() + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({storage});
+
+const router = express.Router();
+
+
+router.get('/', check, (req, res) => {
+    let criteria = {published: true};
+    if (req.user) {
+        criteria = {
+            $or: [
+                {published: true},
+                {user: req.user._id}
+            ]
+        }
+    }
+    Cocktail.find(criteria)
+        .then(result => {
+            if (result) return res.send(result);
+            res.sendStatus(404)
+        })
+        .catch(error => res.status(500).send(error));
+
+});
+
+
+router.get('/:id', (req, res) => {
+    Cocktail.findById(req.params.id)
+        .then(result => {
+            if (result) return res.send(result);
+            res.sendStatus(404)
+        })
+        .catch(() => res.sendStatus(500));
+});
+
+
+router.post('/', auth, upload.single('image'), async (req, res) => {
+    const data = req.body;
+    if (req.file) {
+        data.image = req.file.filename;
+    }
+    data.user = req.user._id;
+    const cocktail = await new Cocktail(data);
+    cocktail.save()
+        .then(result => res.send(result))
+        .catch(error => res.status(400).send(error));
+});
+
+router.put('/:id/toggle_published', [auth, permit('admin')], async (req, res) => {
+    const cocktail = await Cocktail.findById(req.params.id);
+    if (!cocktail) {
+        return res.sendStatus(404);
+    }
+    cocktail.published = !cocktail.published;
+
+    await cocktail.save()
+        .then(() => res.send({message: 'success'}))
+        .catch(() => res.sendStatus(500).send(error))
+});
+
+router.delete('/:id/delete', [auth, permit('admin')], async (req, res) => {
+    await Cocktail.findByIdAndDelete(req.params.id);
+
+    res.send('success');
+});
+
+
+module.exports = router;
