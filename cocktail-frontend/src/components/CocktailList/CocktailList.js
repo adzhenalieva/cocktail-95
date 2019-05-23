@@ -21,7 +21,7 @@ const CocktailList = props => {
                         <span> amount: {ingr.amount}</span>
                     </p>
                 ))}
-                <p>{props.published}</p>
+                <p style={{color: "red"}}>{props.published}</p>
                 {props.children}
             </CardBody>
         </Card>

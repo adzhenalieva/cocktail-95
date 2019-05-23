@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+    DropdownItem,
     Nav,
     Navbar,
     NavbarBrand,
@@ -18,6 +19,11 @@ const Toolbar = ({user, logout}) => {
                 <NavItem>
                     <NavLink tag={RouterNavLink} to="/" exact>Cocktails</NavLink>
                 </NavItem>
+                {user ?
+                    <NavItem>
+                        <NavLink tag={RouterNavLink} to="/cocktails/new" exact>Add new cocktail</NavLink>
+                    </NavItem> : null
+                }
                 {user ? <UserMenu user={user} logout={logout}/> : <AnonimousMenu/>}
             </Nav>
         </Navbar>

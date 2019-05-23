@@ -9,9 +9,6 @@ const UserMenu = ({user, logout}) => (
             Hello, {user.displayName}
         </DropdownToggle>
         <DropdownMenu right>
-            <DropdownItem>
-                <NavLink tag={RouterNavLink} to="/cocktails/new" exact>Add new cocktail</NavLink>
-            </DropdownItem>
             <DropdownItem divider/>
             <DropdownItem className="ml-2" onClick={logout}>
                 Log out
