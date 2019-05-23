@@ -1,6 +1,6 @@
 import axios from '../../axios-api';
-import {push} from 'connected-react-router';
 import {NotificationManager} from "react-notifications";
+import {fetchCocktails} from "./cocktailActions";
 
 export const LOGIN_USER_SUCCESS = "LOGIN_USER_SUCCESS";
 export const LOGIN_USER_FAILURE = "LOGIN_USER_FAILURE";
@@ -17,7 +17,7 @@ export const logoutUser = () => {
             () => {
                 dispatch({type: LOGOUT_USER});
                 NotificationManager.success('Logged out');
-                dispatch(push('/'));
+                dispatch(fetchCocktails());
             },
             error => {
                 NotificationManager.error('Could not logout!')
@@ -32,7 +32,7 @@ export const facebookLogin = userData => {
             response => {
                 dispatch(loginUserSuccess(response.data.user));
                 NotificationManager.success('Logged in via Facebook');
-                dispatch(push('/'));
+                dispatch(fetchCocktails());
             },
             () => {
                 dispatch(loginUserFailure('Validation via facebook failed'))

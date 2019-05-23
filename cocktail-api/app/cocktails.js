@@ -32,7 +32,7 @@ router.get('/', check, (req, res) => {
             ]
         }
     }
-    if (req.user && req.user === "admin") {
+    if (req.user && req.user.role === "admin") {
         criteria = {}
     }
     Cocktail.find(criteria)

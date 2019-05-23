@@ -22,6 +22,7 @@ const CocktailList = props => {
                     </p>
                 ))}
                 <p>{props.published}</p>
+                {props.children}
             </CardBody>
         </Card>
     );
