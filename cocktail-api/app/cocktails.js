@@ -10,7 +10,7 @@ const check = require('../middleware/check');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, config.uploadPathAlbum);
+        cb(null, config.uploadPath);
     },
     filename: (req, file, cb) => {
         cb(null, nanoid() + path.extname(file.originalname));
@@ -31,6 +31,9 @@ router.get('/', check, (req, res) => {
                 {user: req.user._id}
             ]
         }
+    }
+    if (req.user && req.user === "admin") {
+        criteria = {}
     }
     Cocktail.find(criteria)
         .then(result => {
@@ -57,8 +60,14 @@ router.post('/', auth, upload.single('image'), async (req, res) => {
     if (req.file) {
         data.image = req.file.filename;
     }
-    data.user = req.user._id;
-    const cocktail = await new Cocktail(data);
+    console.log(data.ingredients);
+
+    const cocktail = await new Cocktail({
+        user: req.user._id,
+        image: data.image,
+        recipe: data.recipe,
+        title: data.title
+    });
     cocktail.save()
         .then(result => res.send(result))
         .catch(error => res.status(400).send(error));
