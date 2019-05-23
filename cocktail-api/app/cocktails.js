@@ -7,6 +7,7 @@ const Cocktail = require('../models/Cocktail');
 const auth = require('../middleware/auth');
 const permit = require('../middleware/permit');
 const check = require('../middleware/check');
+const util = require('util');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -57,17 +58,20 @@ router.get('/:id', (req, res) => {
 
 router.post('/', auth, upload.single('image'), async (req, res) => {
     const data = req.body;
+
     if (req.file) {
         data.image = req.file.filename;
     }
-    console.log(data.ingredients);
 
     const cocktail = await new Cocktail({
         user: req.user._id,
         image: data.image,
         recipe: data.recipe,
-        title: data.title
-    });
+        title: data.title,
+        ingredients: JSON.parse(data.ingredients)
+
+})
+    ;
     cocktail.save()
         .then(result => res.send(result))
         .catch(error => res.status(400).send(error));

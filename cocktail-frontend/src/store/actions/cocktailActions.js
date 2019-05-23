@@ -41,7 +41,8 @@ export const fetchCocktails = () => {
 };
 
 
-export const sendCocktail = data => {
+export const sendCocktail = (data) => {
+
     return dispatch => {
         return axios.post('/cocktails', data).then(
             () => {

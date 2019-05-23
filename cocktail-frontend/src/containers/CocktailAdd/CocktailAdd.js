@@ -16,7 +16,7 @@ class CocktailAdd extends Component {
         ingredients: [{
             name: "",
             amount: "",
-            // key: Math.random().toString()
+            key: Math.random().toString()
         }]
     };
 
@@ -33,12 +33,20 @@ class CocktailAdd extends Component {
         })
     };
 
-    submitFormHandler = event => {
+    submitFormHandler = async event => {
         event.preventDefault();
+
+
         const formData = new FormData();
         Object.keys(this.state).forEach(key => {
-            formData.append(key, this.state[key]);
+            if(key !=='ingredients'){
+                formData.append(key, this.state[key]);
+            } if(key === 'ingredients') {
+                formData.append(key, JSON.stringify(this.state[key]));
+            }
+
         });
+
 
         this.props.sendCocktail(formData);
     };
@@ -58,8 +66,9 @@ class CocktailAdd extends Component {
         this.setState({
             ingredients: [
                 ...this.state.ingredients,
-                {name: '', amount: '',
-                    // key: Math.random().toString()
+                {
+                    name: '', amount: '',
+                    key: Math.random().toString()
                 }
             ]
         })
@@ -116,7 +125,7 @@ class CocktailAdd extends Component {
                     />
                     <p>Ingredients: </p>
                     {this.state.ingredients.map((ing, index) => (
-                        <FormGroup row key={index}>
+                        <FormGroup row key={ing.key}>
                             <Col sm={6}>
                                 <Label for="name">Name</Label>
                                 <Input
