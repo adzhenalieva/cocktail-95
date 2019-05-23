@@ -13,8 +13,9 @@ import Routes from "./Routes";
 
 class App extends Component {
   render() {
-    return (
+      return (
         <div>
+
           <NotificationContainer/>
           <header>
             <Toolbar user={this.props.user}
