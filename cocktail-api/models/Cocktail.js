@@ -22,7 +22,7 @@ const CocktailSchema = new Schema({
         default: false
     },
     ingredients: [{name: String, amount: String}],
-    marks: [{user: String, mark: String}]
+    ratings: [{userId: String, rating: Number}]
 });
 
 const Cocktail = mongoose.model('Cocktail', CocktailSchema);
