@@ -95,5 +95,15 @@ router.delete('/:id/delete', [auth, permit('admin')], async (req, res) => {
     res.send('success');
 });
 
+router.post('/:id/rating', auth, async (req, res) => {
+    const cocktail = await Cocktail.findById(req.params.id);
+    const rating = req.body.newRating;
+    const ratingObj = { userId: req.user._id, rating: rating };
+    cocktail.ratings.push(ratingObj);
+    await cocktail.save()
+        .then(result => res.send(result))
+        .catch(error => res.sendStatus(400).send(error));
+});
+
 
 module.exports = router;
