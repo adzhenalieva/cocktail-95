@@ -1,4 +1,4 @@
-import {FETCH_COCKTAILS_FAILURE, FETCH_COCKTAILS_SUCCESS, SEND_COCKTAILS_FAILURE} from "../actions/cocktailActions";
+import {FETCH_COCKTAILS_FAILURE, FETCH_COCKTAILS_SUCCESS, SEND_COCKTAILS_FAILURE, SEND_RATING_SUCCESS} from "../actions/cocktailActions";
 
 
 const initialState = {
@@ -22,6 +22,16 @@ const cocktailReducer = (state = initialState, action) => {
             return {
                 ...state,
                 error: action.error
+            };
+        case SEND_RATING_SUCCESS:
+            const idCocktail = action.cocktail._id;
+            const ratings = action.cocktail.ratings;
+            return {
+                ...state,
+                cocktails: state.cocktails.map(cocktail => cocktail._id === idCocktail
+                    ? {...cocktail, ratings: ratings}
+                    : cocktail
+                )
             };
         default:
             return state;

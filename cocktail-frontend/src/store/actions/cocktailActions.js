@@ -14,6 +14,8 @@ export const TOGGLE_PUBLISHED_FAILURE = "TOGGLE_PUBLISHED_FAILURE";
 export const DELETE_SUCCESS = 'DELETE_SUCCESS';
 export const DELETE_FAILURE = "DELETE_FAILURE";
 
+export const SEND_RATING_SUCCESS = 'SEND_RATING_SUCCESS';
+
 export const fetchCocktailsSuccess = data => {
     return {type: FETCH_COCKTAILS_SUCCESS, data};
 };
@@ -30,6 +32,8 @@ const togglePublishedFailure = error => ({type: TOGGLE_PUBLISHED_FAILURE, error}
 const deleteSuccess = () => ({type: DELETE_SUCCESS});
 
 const deleteFailure = error => ({type: DELETE_FAILURE, error});
+
+const sendRatingSuccess = (cocktail) => ({type: SEND_RATING_SUCCESS, cocktail});
 
 export const fetchCocktails = () => {
     return dispatch => {
@@ -98,4 +102,15 @@ export const deleteItem = (id) => {
             }
         )
     }
+};
+
+export const sendRating = (newRating, cocktailId) => {
+    return dispatch => {
+        return axios.post('/cocktails/' + cocktailId + '/rating', {newRating: newRating}).then(
+            (result) => {
+                console.log(result.data);
+                dispatch(sendRatingSuccess(result.data))
+            }
+        );
+    };
 };
