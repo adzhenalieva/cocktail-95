@@ -45,8 +45,8 @@ class Cocktails extends Component {
                                 cocktail={cocktail}
                                 changeRating={this.changeRating}
                                 user={this.props.user}
-                                published={this.togglePublished}
-                                button={this.deleteCocktail}
+                                togglePublished={this.togglePublished}
+                                deleteCocktail={this.deleteCocktail}
                             />
                         )
                     })}
