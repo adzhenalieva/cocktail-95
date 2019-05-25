@@ -2,6 +2,7 @@ import React, {Component, Fragment} from 'react';
 import CocktailList from "../CocktailList/CocktailList";
 import {NotificationManager} from "react-notifications";
 import Button from "reactstrap/es/Button";
+import connect from "react-redux/es/connect/connect";
 
 class Rating extends Component {
 
@@ -12,8 +13,8 @@ class Rating extends Component {
         if (this.props.user && this.props.user.role === 'admin') {
             button = (id) => {
                 return <Fragment>
-                    <Button className="mx-3" onClick={() => this.togglePublished(id)}>Toggle publish</Button>
-                    <Button onClick={() => this.deleteCocktail(id)}>Delete</Button>
+                    <Button className="mx-3" onClick={() => this.props.togglePublished(id)}>Toggle publish</Button>
+                    <Button onClick={() => this.props.deleteCocktail(id)}>Delete</Button>
                 </Fragment>
             }
         } else {
@@ -26,7 +27,6 @@ class Rating extends Component {
         const ratingsNum = cocktail.ratings.length;
         let currentRatingObj;
         const sum = cocktail.ratings.reduce((acc, currentVal) => acc += currentVal.rating || 0, 0);
-        console.log(sum, ratingsNum);
         let ratingToShow = (sum === 0 && ratingsNum === 0) ? 0 : sum / ratingsNum;
         let average = (sum === 0 && ratingsNum === 0) ? 0 : sum / ratingsNum;
         let changeRating = () => {
@@ -59,4 +59,10 @@ class Rating extends Component {
     }
 }
 
-export default Rating;
+const mapStateToProps = state => {
+    return {
+        user: state.users.user
+    }
+};
+
+export default connect(mapStateToProps)(Rating);
