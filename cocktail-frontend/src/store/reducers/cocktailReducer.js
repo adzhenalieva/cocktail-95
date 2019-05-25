@@ -1,4 +1,9 @@
-import {FETCH_COCKTAILS_FAILURE, FETCH_COCKTAILS_SUCCESS, SEND_COCKTAILS_FAILURE, SEND_RATING_SUCCESS} from "../actions/cocktailActions";
+import {
+    FETCH_COCKTAILS_FAILURE,
+    FETCH_COCKTAILS_SUCCESS,
+    SEND_COCKTAILS_FAILURE,
+    SEND_RATING_SUCCESS
+} from "../actions/cocktailActions";
 
 
 const initialState = {
