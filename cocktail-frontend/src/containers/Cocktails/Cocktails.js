@@ -1,8 +1,8 @@
 import React, {Component, Fragment} from 'react';
 import {connect} from "react-redux";
-import CocktailList from "../../components/CocktailList/CocktailList";
-import {deleteItem, fetchCocktails, togglePublished} from "../../store/actions/cocktailActions";
-import {Button, CardColumns} from "reactstrap";
+import {fetchCocktails, sendRating, togglePublished, deleteItem} from "../../store/actions/cocktailActions";
+import {CardColumns} from "reactstrap";
+import Rating from "../../components/Rating/Rating";
 
 class Cocktails extends Component {
     componentDidMount() {
@@ -25,40 +25,31 @@ class Cocktails extends Component {
         )
     };
 
+    changeRating = (newRating, cocktailId) => {
+        console.log(newRating, cocktailId);
+
+        this.props.sendRating(newRating, cocktailId );
+    };
+
     render() {
-        let button = () => {
-            //
-        };
-        if (this.props.user && this.props.user.role === 'admin') {
-            button = (id) => {
-                return <Fragment>
-                    <Button className="mx-3" onClick={() => this.togglePublished(id)}>Toggle publish</Button>
-                    <Button onClick={() => this.deleteCocktail(id)}>Delete</Button>
-                </Fragment>
-            }
-        } else {
-            button = () => {
-                //
-            };
-        }
         return (
             <Fragment>
                 <h1>
                     Cocktails
                 </h1>
                 <CardColumns>
-                    {this.props.cocktails.map(cocktail => (
-                        <CocktailList
-                            key={cocktail._id}
-                            title={cocktail.title}
-                            image={cocktail.image}
-                            recipe={cocktail.recipe}
-                            ingredients={cocktail.ingredients}
-                            published={cocktail.published ? null : 'Status: unpublished'}>
-                            {button(cocktail._id)}
-                        </CocktailList>
-
-                    ))}
+                    {this.props.cocktails.map(cocktail => {
+                        return (
+                            <Rating
+                                key={cocktail._id}
+                                cocktail={cocktail}
+                                changeRating={this.changeRating}
+                                user={this.props.user}
+                                published={this.togglePublished}
+                                button={this.deleteCocktail}
+                            />
+                        )
+                    })}
                 </CardColumns>
             </Fragment>
         );
@@ -76,7 +67,8 @@ const mapDispatchToProps = dispatch => {
     return {
         onFetchCocktails: () => dispatch(fetchCocktails()),
         deleteCocktail: id => dispatch(deleteItem(id)),
-        togglePublished: id => dispatch(togglePublished(id))
+        togglePublished: id => dispatch(togglePublished(id)),
+        sendRating: (newRating, cocktailId) => dispatch(sendRating(newRating, cocktailId))
     }
 };
 
